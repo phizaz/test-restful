@@ -1,0 +1,73 @@
+doctype html
+html(ng-app="app")
+  head
+    meta(charset="utf-8")
+    title Test-Restful
+
+    script(src="bower_components/underscore/underscore.js")
+    script(src="bower_components/moment/min/moment-with-langs.min.js")
+    script(src="bower_components/jquery/dist/jquery.min.js")
+    script(src="bower_components/bootstrap/dist/js/bootstrap.min.js")
+    script(src="bower_components/angular/angular.min.js")
+    script(src="bower_components/angular-ui-router/release/angular-ui-router.min.js")
+    script(src="bower_components/angular-resource/angular-resource.min.js")
+
+    script(src="app.js")
+
+    link(rel="stylesheet", href="bower_components/bootstrap/dist/css/bootstrap.min.css")
+
+  body
+
+    div(ng-controller="testCtrl").container
+      table.table
+        thead
+          th ID
+          th TITLE
+          th CREATED_AT
+          th UPDATED_AT
+          th(style="width: 30%") REPLY
+          th
+        tr(ng-repeat="post in posts")
+          td {{post.id}}
+          td
+            span(ng-if="!post.edit", ng-click="post.edit = true") {{post.title}}
+            div(ng-if="post.edit")
+              form(ng-submit="update(post)")
+                input(type="text", ng-model="post.title").form-control
+
+            table.table(ng-if="post.comments.length > 0")
+              thead
+                th ID
+                th TITLE
+                th UPDATED_AT
+                th
+              tr(ng-repeat="comment in post.comments")
+                td {{comment.id}}
+                td
+                  span(ng-if="!comment.edit", ng-click="comment.edit = true") {{comment.title}}
+                  div(ng-if="comment.edit")
+                    form(ng-submit="commentUpdate(comment)")
+                      input(type="text", ng-model="comment.title").form-control
+                td {{comment.updated_at.date}}
+                td
+                  button(type="button", ng-click="commentDelete(post, comment)").btn.btn-primary
+                    i.glyphicon.glyphicon-remove
+
+          td {{post.created_at.date}}
+          td {{post.updated_at.date}}
+          td
+            form(ng-submit="commentCreate(post)")
+              div.input-group
+                input(type="text", ng-model="post.comment.title").form-control
+                span.input-group-btn
+                  button(type="submit").btn.btn-primary
+                    i.glyphicon.glyphicon-pencil
+          td
+            button(type="button", ng-click="delete(post)").btn.btn-primary
+              i.glyphicon.glyphicon-remove
+      div
+        form(ng-submit="create()")
+          div.form-group
+            label Post
+            input(type="text", ng-model="post.title").form-control
+          button(type="submit").btn.btn-primary.btn-lg Post

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <title>Test-Restful</title>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/moment/min/moment-with-langs.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div ng-controller="testCtrl" class="container">
+      <table class="table">
+        <thead>
+          <th>ID</th>
+          <th>TITLE</th>
+          <th>CREATED_AT</th>
+          <th>UPDATED_AT</th>
+          <th style="width: 30%">REPLY</th>
+          <th></th>
+        </thead>
+        <tr ng-repeat="post in posts">
+          <td>{{post.id}}</td>
+          <td><span ng-if="!post.edit" ng-click="post.edit = true">{{post.title}}</span>
+            <div ng-if="post.edit">
+              <form ng-submit="update(post)">
+                <input type="text" ng-model="post.title" class="form-control">
+              </form>
+            </div>
+            <table ng-if="post.comments.length &gt; 0" class="table">
+              <thead>
+                <th>ID</th>
+                <th>TITLE</th>
+                <th>UPDATED_AT</th>
+                <th></th>
+              </thead>
+              <tr ng-repeat="comment in post.comments">
+                <td>{{comment.id}}</td>
+                <td><span ng-if="!comment.edit" ng-click="comment.edit = true">{{comment.title}}</span>
+                  <div ng-if="comment.edit">
+                    <form ng-submit="commentUpdate(comment)">
+                      <input type="text" ng-model="comment.title" class="form-control">
+                    </form>
+                  </div>
+                </td>
+                <td>{{comment.updated_at.date}}</td>
+                <td>
+                  <button type="button" ng-click="commentDelete(post, comment)" class="btn btn-primary"><i class="glyphicon glyphicon-remove"></i></button>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>{{post.created_at.date}}</td>
+          <td>{{post.updated_at.date}}</td>
+          <td>
+            <form ng-submit="commentCreate(post)">
+              <div class="input-group">
+                <input type="text" ng-model="post.comment.title" class="form-control"><span class="input-group-btn">
+                  <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></button></span>
+              </div>
+            </form>
+          </td>
+          <td>
+            <button type="button" ng-click="delete(post)" class="btn btn-primary"><i class="glyphicon glyphicon-remove"></i></button>
+          </td>
+        </tr>
+      </table>
+      <div>
+        <form ng-submit="create()">
+          <div class="form-group">
+            <label>Post</label>
+            <input type="text" ng-model="post.title" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg">Post</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
